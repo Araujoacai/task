@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appalerta-deployment
+  labels:
+    app: appalerta
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: appalerta
+  template:
+    metadata:
+      labels:
+        app: appalerta
+    spec:
+      containers:
+      - name: appalerta-container
+        # Assumindo a imagem local ou repositório (ex: meudockerhub/appalerta:latest)
+        # É necessário buildar e fazer o push desta imagem antes do apply
+        image: appalerta:latest 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

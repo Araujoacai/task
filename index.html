@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppAlerta | Tarefas Inteligentes</title>
+    <!-- Fontes Modernas (Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Ícones Phosphor -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- CSS Modular -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Blur de Fundo Animado -->
+    <div class="bg-blur blob-1"></div>
+    <div class="bg-blur blob-2"></div>
+
+    <!-- TELA DE LOGIN (Glassmorphism Modal) -->
+    <div id="login-overlay" class="login-overlay active">
+        <div class="login-box glass-panel">
+            <h2>Bem-vindo ao AppAlerta</h2>
+            <p>Faça login para acessar suas tarefas</p>
+
+            <form id="auth-form" class="auth-form">
+                <div class="input-group">
+                    <input type="email" id="auth-email" placeholder="Seu E-mail" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="auth-password" placeholder="Sua Senha" required minlength="6">
+                </div>
+                <button type="submit" id="btn-login" class="primary-btn">Entrar</button>
+            </form>
+
+            <div class="auth-footer">
+                <span id="auth-toggle-text">Não tem uma conta? <a href="#" id="auth-toggle-btn">Cadastre-se</a></span>
+            </div>
+            <div id="auth-error" class="error-msg hidden">Erro de autenticação!</div>
+        </div>
+    </div>
+
+    <!-- APLICATIVO PRINCIPAL (Oculto inicialmente) -->
+    <main id="app-main" class="app-container glass-panel hidden">
+        <header class="app-header">
+            <div class="header-titles">
+                <h1>AppAlerta</h1>
+                <p id="user-display-name">Carregando usuário...</p>
+            </div>
+            <div class="header-actions">
+                <button id="btn-perm-notif" class="icon-btn tooltip" data-tooltip="Ativar Notificações">
+                    <i class="ph ph-bell-ringing"></i>
+                </button>
+                <button id="btn-logout" class="icon-btn tooltip" data-tooltip="Sair">
+                    <i class="ph ph-sign-out"></i>
+                </button>
+            </div>
+        </header>
+
+        <section class="tasks-area">
+            <!-- Loading Indicator -->
+            <div id="loader" class="loader">
+                <i class="ph ph-spinner-gap spin"></i> Carregando suas tarefas...
+            </div>
+
+            <ul id="task-list" class="task-list">
+                <!-- As tarefas serão inseridas via JS aqui -->
+            </ul>
+        </section>
+
+        <!-- Área Inferior: Entrada Manual vs entrada de IA -->
+        <section class="input-area">
+
+            <!-- Entrada estilo Chat (IA) -->
+            <div class="chat-input-container">
+                <i class="ph ph-sparkle ai-icon"></i>
+                <input type="text" id="ai-input" placeholder='Ex: "Comprar pão amanhã às 7h"' autocomplete="off">
+                <button id="btn-send-ai" class="send-btn">
+                    <i class="ph-fill ph-paper-plane-right"></i>
+                </button>
+            </div>
+
+            <!-- Botão para Expansão Manual -->
+            <button id="btn-toggle-manual" class="text-btn">...ou preencher manualmente</button>
+
+            <!-- Formulário Manual Oculto (Expansível) -->
+            <form id="manual-form" class="manual-form hidden">
+                <div class="input-group">
+                    <input type="text" id="man-title" placeholder="Título da Tarefa" required>
+                </div>
+                <div class="flex-row">
+                    <div class="input-group flex-1">
+                        <input type="date" id="man-date" required>
+                    </div>
+                    <div class="input-group flex-1">
+                        <input type="time" id="man-time" required>
+                    </div>
+                </div>
+                <button type="submit" class="primary-btn">Salvar Tarefa</button>
+            </form>
+
+        </section>
+    </main>
+
+    <!-- Feedback Toast -->
+    <div id="toast" class="toast hidden">
+        <i class="ph ph-check-circle"></i>
+        <span id="toast-msg">Tarefa criada!</span>
+    </div>
+
+    <!-- Scripts em Tipo Module para comportar o Firebase e as importações locais -->
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
