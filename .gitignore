@@ -1,0 +1,27 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+
+# OS/Editor Settings
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build output (if you ever use bundlers like Vite/Webpack)
+dist/
+build/
