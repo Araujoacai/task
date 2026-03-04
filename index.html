@@ -5,114 +5,174 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AppAlerta | Tarefas Inteligentes</title>
-    <!-- Fontes Modernas (Outfit) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <!-- Ícones Phosphor -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- CSS Modular -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0D1117">
+    <link rel="apple-touch-icon" href="icon-192.svg">
 </head>
 
 <body>
-    <!-- Blur de Fundo Animado -->
+    <!-- Fundo Animado -->
     <div class="bg-blur blob-1"></div>
     <div class="bg-blur blob-2"></div>
+    <div class="bg-blur blob-3"></div>
 
-    <!-- TELA DE LOGIN (Glassmorphism Modal) -->
+    <!-- ========== TELA DE LOGIN ========== -->
     <div id="login-overlay" class="login-overlay active">
-        <div class="login-box glass-panel">
-            <h2>Bem-vindo ao AppAlerta</h2>
-            <p>Faça login para acessar suas tarefas</p>
+        <div class="login-box">
+            <div class="login-logo">
+                <i class="ph-fill ph-bell-ringing"></i>
+            </div>
+            <h2>AppAlerta</h2>
+            <p id="auth-subtitle">Entre para gerenciar suas tarefas com IA</p>
 
             <form id="auth-form" class="auth-form">
-                <div class="input-group">
-                    <input type="email" id="auth-email" placeholder="Seu E-mail" required>
+                <div class="field-group">
+                    <i class="ph ph-envelope field-icon"></i>
+                    <input type="email" id="auth-email" placeholder="Seu e-mail" autocomplete="email" required>
                 </div>
-                <div class="input-group">
-                    <input type="password" id="auth-password" placeholder="Sua Senha" required minlength="6">
+                <div class="field-group">
+                    <i class="ph ph-lock-simple field-icon"></i>
+                    <input type="password" id="auth-password" placeholder="Sua senha" autocomplete="current-password"
+                        required minlength="6">
+                    <button type="button" id="btn-toggle-pass" class="pass-toggle">
+                        <i class="ph ph-eye" id="pass-eye-icon"></i>
+                    </button>
                 </div>
-                <button type="submit" id="btn-login" class="primary-btn">Entrar</button>
+                <button type="submit" id="btn-login" class="primary-btn">
+                    <span id="btn-login-text">Entrar</span>
+                </button>
             </form>
 
-            <div class="auth-footer">
-                <span id="auth-toggle-text">Não tem uma conta? <a href="#" id="auth-toggle-btn">Cadastre-se</a></span>
-            </div>
-            <div id="auth-error" class="error-msg hidden">Erro de autenticação!</div>
+            <div id="auth-error" class="error-msg hidden"></div>
+
+            <div class="auth-divider"><span>ou</span></div>
+
+            <p class="auth-footer">
+                <span id="auth-toggle-text">Não tem uma conta?</span>
+                <button type="button" id="auth-toggle-btn" class="link-btn">Cadastre-se</button>
+            </p>
         </div>
     </div>
 
-    <!-- APLICATIVO PRINCIPAL (Oculto inicialmente) -->
-    <main id="app-main" class="app-container glass-panel hidden">
+    <!-- ========== APLICATIVO PRINCIPAL ========== -->
+    <main id="app-main" class="app-container hidden">
+
+        <!-- Header -->
         <header class="app-header">
-            <div class="header-titles">
-                <h1>AppAlerta</h1>
-                <p id="user-display-name">Carregando usuário...</p>
+            <div class="header-brand">
+                <i class="ph-fill ph-bell-ringing brand-icon"></i>
+                <div>
+                    <h1>AppAlerta</h1>
+                    <p id="user-display-name">carregando...</p>
+                </div>
             </div>
             <div class="header-actions">
-                <button id="btn-perm-notif" class="icon-btn tooltip" data-tooltip="Ativar Notificações">
-                    <i class="ph ph-bell-ringing"></i>
+                <button id="btn-perm-notif" class="icon-btn" title="Ativar Notificações">
+                    <i class="ph ph-bell" id="notif-icon"></i>
                 </button>
-                <button id="btn-logout" class="icon-btn tooltip" data-tooltip="Sair">
+                <button id="btn-logout" class="icon-btn" title="Sair">
                     <i class="ph ph-sign-out"></i>
                 </button>
             </div>
         </header>
 
-        <section class="tasks-area">
-            <!-- Loading Indicator -->
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-pill" id="stat-pending">
+                <i class="ph ph-hourglass"></i>
+                <span id="count-pending">0</span> pendentes
+            </div>
+            <div class="stat-pill done" id="stat-done">
+                <i class="ph ph-check-circle"></i>
+                <span id="count-done">0</span> concluídas
+            </div>
+        </div>
+
+        <!-- Lista de Tarefas -->
+        <section class="tasks-area" id="tasks-area">
             <div id="loader" class="loader">
-                <i class="ph ph-spinner-gap spin"></i> Carregando suas tarefas...
+                <i class="ph ph-spinner-gap spin"></i>
+                <span>Carregando tarefas...</span>
             </div>
 
-            <ul id="task-list" class="task-list">
-                <!-- As tarefas serão inseridas via JS aqui -->
-            </ul>
+            <!-- Estado vazio -->
+            <div id="empty-state" class="empty-state hidden">
+                <i class="ph ph-clipboard-text"></i>
+                <p>Nenhuma tarefa ainda.</p>
+                <small>Use o campo abaixo para adicionar a sua primeira!</small>
+            </div>
+
+            <ul id="task-list" class="task-list"></ul>
         </section>
 
-        <!-- Área Inferior: Entrada Manual vs entrada de IA -->
+        <!-- Área de Input -->
         <section class="input-area">
 
-            <!-- Entrada estilo Chat (IA) -->
-            <div class="chat-input-container">
-                <i class="ph ph-sparkle ai-icon"></i>
-                <input type="text" id="ai-input" placeholder='Ex: "Comprar pão amanhã às 7h"' autocomplete="off">
-                <button id="btn-send-ai" class="send-btn">
+            <!-- Barra de Chat IA -->
+            <div class="chat-bar">
+                <div class="ai-badge"><i class="ph ph-sparkle"></i> IA</div>
+                <input type="text" id="ai-input" placeholder='Ex: "Reunião amanhã às 14h"' autocomplete="off">
+                <button id="btn-send-ai" class="send-btn" title="Enviar para IA">
                     <i class="ph-fill ph-paper-plane-right"></i>
                 </button>
             </div>
 
-            <!-- Botão para Expansão Manual -->
-            <button id="btn-toggle-manual" class="text-btn">...ou preencher manualmente</button>
+            <!-- Toggle Manual -->
+            <button id="btn-toggle-manual" class="toggle-manual-btn">
+                <i class="ph ph-plus-circle"></i>
+                <span>Adicionar manualmente</span>
+                <i class="ph ph-caret-down" id="manual-caret"></i>
+            </button>
 
-            <!-- Formulário Manual Oculto (Expansível) -->
-            <form id="manual-form" class="manual-form hidden">
-                <div class="input-group">
-                    <input type="text" id="man-title" placeholder="Título da Tarefa" required>
-                </div>
-                <div class="flex-row">
-                    <div class="input-group flex-1">
-                        <input type="date" id="man-date" required>
+            <!-- Formulário Manual -->
+            <div id="manual-form-wrapper" class="manual-wrapper collapsed">
+                <form id="manual-form" class="manual-form">
+                    <div class="field-group">
+                        <i class="ph ph-pencil field-icon"></i>
+                        <input type="text" id="man-title" placeholder="Título da tarefa" required>
                     </div>
-                    <div class="input-group flex-1">
-                        <input type="time" id="man-time" required>
+                    <div class="two-col">
+                        <div class="field-group">
+                            <i class="ph ph-calendar-blank field-icon"></i>
+                            <input type="date" id="man-date" required>
+                        </div>
+                        <div class="field-group">
+                            <i class="ph ph-clock field-icon"></i>
+                            <input type="time" id="man-time" required>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" class="primary-btn">Salvar Tarefa</button>
-            </form>
+                    <button type="submit" class="primary-btn">
+                        <i class="ph ph-floppy-disk"></i> Salvar Tarefa
+                    </button>
+                </form>
+            </div>
 
         </section>
     </main>
 
-    <!-- Feedback Toast -->
+    <!-- Toast -->
     <div id="toast" class="toast hidden">
-        <i class="ph ph-check-circle"></i>
-        <span id="toast-msg">Tarefa criada!</span>
+        <i class="ph ph-check-circle toast-icon"></i>
+        <span id="toast-msg"></span>
     </div>
 
-    <!-- Scripts em Tipo Module para comportar o Firebase e as importações locais -->
     <script type="module" src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => console.log('ServiceWorker registrado com sucesso:', reg.scope))
+                    .catch((err) => console.error('Falha ao registrar o ServiceWorker:', err));
+            });
+        }
+    </script>
 </body>
 
 </html>
