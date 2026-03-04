@@ -1,4 +1,4 @@
-const CACHE_NAME = 'app-alerta-v2';
+const CACHE_NAME = 'app-alerta-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

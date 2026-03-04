@@ -434,8 +434,10 @@ function checkNotifications() {
         sendNotification('⏰ AppAlerta — Lembrete!', {
             body: task.title,
             icon: './icon-192.svg',
+            badge: './icon-192.svg', // Ajuda a aparecer na barra de status do Android
             tag: key,
-            requireInteraction: true, // Notificação fica na tela até o usuário fechar
+            requireInteraction: true, // Força a notificação a ficar na tela até o usuário fechar/clicar
+            vibrate: [500, 250, 500, 250, 500, 250, 1000], // Padrão agressivo: vibra, pausa, vibra...
         });
     });
 }
