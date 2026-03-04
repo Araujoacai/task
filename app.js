@@ -364,9 +364,9 @@ btnPermNotif.addEventListener('click', async () => {
 
     // Se já ativado: clique no sino dispara notificação de teste imediata
     if (Notification.permission === 'granted') {
-        new Notification('🔔 AppAlerta — Teste', {
+        sendNotification('🔔 AppAlerta — Teste', {
             body: 'Notificações estão funcionando corretamente!',
-            icon: 'https://cdn-icons-png.flaticon.com/512/3239/3239999.png',
+            icon: './icon-192.svg',
             tag: 'test-notif',
         });
         showToast('Notificação de teste enviada!');
@@ -378,9 +378,9 @@ btnPermNotif.addEventListener('click', async () => {
         setNotifActive(true);
         showToast('Notificações ativadas! 🔔');
         // Dispara uma notificação de boas-vindas imediata para confirmar
-        new Notification('🔔 AppAlerta ativado!', {
+        sendNotification('🔔 AppAlerta ativado!', {
             body: 'Você receberá lembretes nos horários das suas tarefas.',
-            icon: 'https://cdn-icons-png.flaticon.com/512/3239/3239999.png',
+            icon: './icon-192.svg',
             tag: 'welcome-notif',
         });
         startNotificationLoop();
@@ -431,9 +431,9 @@ function checkNotifications() {
         notifiedTasks.add(key);
         if (notifiedTasks.size > 200) notifiedTasks.clear();
 
-        new Notification('⏰ AppAlerta — Lembrete!', {
+        sendNotification('⏰ AppAlerta — Lembrete!', {
             body: task.title,
-            icon: 'https://cdn-icons-png.flaticon.com/512/3239/3239999.png',
+            icon: './icon-192.svg',
             tag: key,
             requireInteraction: true, // Notificação fica na tela até o usuário fechar
         });
@@ -459,3 +459,14 @@ function toDateValue(date) {
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// Função centralizada para disparar notificações com suporte a Android (via Service Worker)
+function sendNotification(title, options) {
+    if (navigator.serviceWorker) {
+        navigator.serviceWorker.ready.then(function (registration) {
+            registration.showNotification(title, options);
+        });
+    } else {
+        new Notification(title, options);
+    }
+}

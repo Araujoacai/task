@@ -25,3 +25,4 @@ node_modules/
 # Build output (if you ever use bundlers like Vite/Webpack)
 dist/
 build/
+.vercel
