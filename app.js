@@ -6,7 +6,7 @@ import {
 import {
     signInWithEmailAndPassword, createUserWithEmailAndPassword,
     onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+} from "firebase-config.js";
 import { parseTaskFromText } from './ai-parser.js';
 
 // ===================== ELEMENTOS DA UI =====================
